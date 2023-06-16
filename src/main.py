@@ -1,9 +1,9 @@
-from utils import output
+from src import utils
 import re
 
 
 def main():
-    data = output()
+    data = utils.output()
     for i in data:
         date = i.get('date')
         description = i.get('description')
@@ -27,7 +27,7 @@ def main():
             bank_account = word_two + ' **' + assembled_piece_two[20:]
             print(f"""{date[:10]} {description}
 {word_one} {card} -> {bank_account}
-{amount} {currency}""")
+{amount} {currency}\n""")
 
         else:
             number_two = filter(str.isdecimal, i.get('to'))
@@ -39,8 +39,7 @@ def main():
             bank_account = word + ' **' + assembled_piece_two[20:]
             print(f"""{date[:10]} {description}
 {bank_account}
-{amount} {currency}""")
-
+{amount} {currency}\n""")
 
 
 main()
