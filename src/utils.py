@@ -1,5 +1,6 @@
 import json
 import operator
+import os
 
 
 def open_file():
@@ -7,7 +8,8 @@ def open_file():
     Функция загружает все данные и сохраняет их в переменную data из файла operations.json
     :return: Возвращает все операции клиента
     """
-    with open("operations.json", "r", encoding="utf-8") as file:
+    operations = os.path.join(os.path.dirname(__file__), 'operations.json')
+    with open(operations, "r", encoding="utf-8") as file:
         data = json.load(file)
         return data
 
