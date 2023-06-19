@@ -1,5 +1,6 @@
-from src import utils
+import utils
 import re
+from _datetime import datetime
 
 
 def main():
@@ -21,6 +22,9 @@ def main():
         currency = i.get('operationAmount')['currency']['name']
         if of is not None:
             """Если данные откуда был перевод не пустой, то продолжает работу по коду ниже"""
+            # Воспользовался datetime для приведения даты в фотрмат дд-мм-гггг
+            normal_date = datetime.strptime(date[:10], '%Y-%m-%d')
+            formatted_date = normal_date.strftime('%d-%m-%Y')
             number_one = filter(str.isdecimal, i.get('from'))
             number_two = filter(str.isdecimal, i.get('to'))
             # Создал две переменные которые фильтруются, возвращает истину если все символы десятичные
@@ -38,12 +42,15 @@ def main():
             card = assembled_piece_one[:7] + '** ****' + assembled_piece_one[15:]
             bank_account = word_two + ' **' + assembled_piece_two[20:]
             # Собираю из кусков название карты или счет совместно с их номерами заменив некоторые значения на *
-            operations.append(f"""{date[:10]} {description}
+            operations.append(f"""{formatted_date} {description}
 {word_one} {card} -> {bank_account}
 {amount} {currency}\n""")
 
         else:
             """Если данные откуда был перевод пустой, то продолжает работу по коду ниже"""
+            # Воспользовался datetime для приведения даты в фотрмат дд-мм-гггг
+            normal_date = datetime.strptime(date[:10], '%Y-%m-%d')
+            formatted_date = normal_date.strftime('%d-%m-%Y')
             number_two = filter(str.isdecimal, i.get('to'))
             word = re.sub(r'[^\w\s]+|\d+', r'', i.get('to')).strip()
             composed_number = "".join(number_two)
@@ -52,7 +59,7 @@ def main():
             assembled_piece_two = ' '.join(chunks)
             bank_account = word + ' **' + assembled_piece_two[20:]
             # Тут абсолютно тоже самое что и выше но для перевода где from пустой
-            operations.append(f"""{date[:10]} {description}
+            operations.append(f"""{formatted_date} {description}
 {bank_account}
 {amount} {currency}\n""")
     return operations
